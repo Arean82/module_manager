@@ -11,9 +11,9 @@ Redmine::Plugin.register(PLUGIN_NAME.to_sym) do
   name 'Module manager plugin'
   author 'RK team'
   description 'Module manager plugin plugin for redmine'
-  version '0.0.1'
-  url 'https://cinet.ru'
-  author_url 'https://cinet.ru'
+  version '0.0.2'
+  url 'https://github.com/Arean82/module_manager'
+  author_url 'https://github.com/Arean82/module_manager'
 
   settings default: {empty: false},
            partial: PLUGIN_NAME + '/settings/index'
