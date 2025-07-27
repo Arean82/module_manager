@@ -2,7 +2,7 @@
 PLUGIN_NAME = 'module_manager'
 
 # rubocop:disable Style/FrozenStringLiteralComment
-ActiveSupport::Dependencies.explicitly_unloadable_constants = PLUGIN_NAME if Rails.env.development?
+# ActiveSupport::Dependencies.explicitly_unloadable_constants = PLUGIN_NAME if Rails.env.development?
 # rubocop:enable Style/FrozenStringLiteralComment
 
 require 'redmine'
