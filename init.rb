@@ -9,7 +9,7 @@ require 'redmine'
 
 Redmine::Plugin.register(PLUGIN_NAME.to_sym) do
   name 'Module manager plugin'
-  author 'RK team'
+  author 'Arean Narrayan'
   description 'Module manager plugin plugin for redmine'
   version '0.0.2'
   url 'https://github.com/Arean82/module_manager'
