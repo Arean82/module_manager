@@ -34,8 +34,8 @@
           <th><%= l(:label_project) %></th>
           <% @modules.each do |modul| %>
             <th>
-              <%= link_to_function('',
-                   "toggleCheckboxesBySelector('input.role-#{modul}')",
+              <%= link_to('', '#',
+                   onclick: "toggleCheckboxesBySelector('input.role-#{modul}'); return false;",
                    :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
                    :class => 'icon-only icon-checked') %> 
               <%= l_or_humanize(modul, :prefix => "project_module_") %>
@@ -48,8 +48,8 @@
         <% project_tree(Project.all, :init_level => true) do |project, level| %>
           <tr class="<%= "project-#{project.identifier}" %> <%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
             <td>
-              <%= link_to_function('',
-                   "toggleCheckboxesBySelector('.project-#{project.identifier} input')",
+              <%= link_to('', '#',
+                   onclick: "toggleCheckboxesBySelector('.project-#{project.identifier} input'); return false;",
                    :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
                    :class => 'icon-only icon-checked') %>
             </td>
