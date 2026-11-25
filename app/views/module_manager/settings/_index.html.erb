@@ -82,13 +82,17 @@
 }
 </style>
 
-<% current_settings = Setting.plugin_module_manager || {} %>
+<%
+  # Use local settings passed from SettingsController, falling back to Setting.plugin_module_manager
+  merged_settings = (defined?(settings) && settings.is_a?(Hash) && settings.key?('show_in_admin_menu')) ? settings : (Setting.plugin_module_manager || {})
+  is_checked = merged_settings['show_in_admin_menu'].nil? ? true : (merged_settings['show_in_admin_menu'].to_s == '1')
+%>
 
 <div class="module-manager-settings-header">
   <p>
     <label>
       <%= hidden_field_tag 'settings[show_in_admin_menu]', '0' %>
-      <%= check_box_tag 'settings[show_in_admin_menu]', '1', current_settings['show_in_admin_menu'] != '0' %>
+      <%= check_box_tag 'settings[show_in_admin_menu]', '1', is_checked %>
       <strong><%= l(:label_show_in_admin_menu, default: "Show 'Global Module Manager' link in Administration menu") %></strong>
     </label>
     <br>
@@ -115,26 +119,20 @@
   <fieldset id="filters" class="collapsible collapsed">
     <legend onclick="toggleFieldset(this);" class="icon icon-collapsed"><%= l(:label_filter_plural) %></legend>
     <div style="display: none;">
-      <%= form_tag(Rails.application.routes.url_helpers.plugin_settings_path('module_manager'), :id=> 'sdf', :method => :get) do %>
-        <fieldset>
-          <legend><%= toggle_checkboxes_link('#filters input[type=checkbox]:enabled') %></legend>
-          <% Redmine::AccessControl.available_project_modules.each do |m| %>
-            <div>
-              <%= check_box_tag "ids[]", m, @modules.include?(m) %>
-              <%= l_or_humanize(m, :prefix => "project_module_") %>
-            </div>
-          <% end %>
-        </fieldset>
-        <p>
-          <%= submit_tag l(:button_apply) %>
-          <%= link_to l(:button_clear), Rails.application.routes.url_helpers.plugin_settings_path('module_manager'), :class => 'icon icon-reload' %>
-        </p>
-      <% end %>
+      <fieldset>
+        <legend><%= toggle_checkboxes_link('#filters input[type=checkbox]:enabled') %></legend>
+        <% Redmine::AccessControl.available_project_modules.each do |m| %>
+          <div>
+            <%= check_box_tag "module_col_toggle_#{m}", m, true, onchange: "toggleModuleColumn('#{m}', this.checked)" %>
+            <%= l_or_humanize(m, :prefix => "project_module_") %>
+          </div>
+        <% end %>
+      </fieldset>
     </div>
   </fieldset>
 </div>
 
-<%= form_tag(Rails.application.routes.url_helpers.module_manager_update_path, :id => 'module_manager_update') do %>
+<div id='module_manager_matrix_wrapper'>
   <div class="autoscroll module-manager-table-container">
     <table class="list permissions" id="module-manager-partial-table">
       <thead>
@@ -142,7 +140,7 @@
         <th class="sticky-col-check"></th>
         <th class="sticky-col-project"><%=l(:label_project)%></th>
         <% @modules.each do |modul| %>
-          <th>
+          <th class="col-module-<%= modul %>">
             <%= link_to('', '#',
                         onclick: "toggleCheckboxesBySelector('input.role-#{modul}'); return false;",
                         :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
@@ -167,7 +165,7 @@
             <span><%= link_to_project(project, {}, :title => project.name) %></span>
           </td>
           <% @modules.each do |modul| %>
-            <td title="<%= project.name %>">
+            <td title="<%= project.name %>" class="col-module-<%= modul %>">
               <%= check_box_tag "enabled_module[#{project.id}][]", modul, (project.module_enabled? modul), :id => nil, :class => "role-#{modul}" %>
             </td>
           <% end %>
@@ -176,9 +174,8 @@
       </tbody>
     </table>
   </div>
-  <p><%= check_all_links 'module_manager_update' %></p>
-  <p><%= submit_tag l(:button_save) %></p>
-<% end %>
+  <p><%= check_all_links 'settings' %></p>
+</div>
 
 <script>
 function filterModuleManagerPartialProjects(term) {
@@ -191,6 +188,15 @@ function filterModuleManagerPartialProjects(term) {
     } else {
       row.style.display = 'none';
     }
+  });
+}
+</script>
+
+<script>
+function toggleModuleColumn(modul, isVisible) {
+  var cells = document.querySelectorAll('#module-manager-partial-table .col-module-' + modul);
+  cells.forEach(function(cell) {
+    cell.style.display = isVisible ? '' : 'none';
   });
 }
 </script>
