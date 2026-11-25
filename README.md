@@ -4,14 +4,16 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/Arean82/module_manager)](https://github.com/Arean82/module_manager/commits/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Redmine](https://img.shields.io/badge/Redmine-5.x%20%7C%206.x%20%7C%207.x-blue.svg)](https://www.redmine.org/)
+[![Ruby](https://img.shields.io/badge/Ruby-3.x%20%7C%204.x-red.svg)](https://www.ruby-lang.org/)
 
-A **Redmine plugin** that allows administrators to manage project modules globally across all projects from a single unified interface. Enable or disable modules across multiple projects simultaneously with an interactive tree view, project search, and sticky column navigation.
+A **Redmine plugin** that allows administrators to manage project modules globally across all projects from a single unified interface. Enable or disable modules across multiple projects simultaneously with an interactive tree view, project search, sticky column navigation, and configurable admin panel visibility.
 
 ---
 
 ## ✨ Features
 
 - **Global Module Management** - View and manage project modules across ALL projects in one centralized matrix.
+- **Configurable Admin Menu Link** - Toggle whether "Global Module Manager" appears in the main Administration sidebar panel, or keep it strictly inside plugin configuration.
 - **Sticky Freeze Columns** - The Project name column and check-all icon stay frozen on the left while scrolling horizontally through module columns.
 - **Sticky Table Header** - Column headers stay pinned at the top while scrolling vertically down long project lists.
 - **Instant Project Live Search** - Filter project rows in real-time as you type without reloading the page.
@@ -21,24 +23,25 @@ A **Redmine plugin** that allows administrators to manage project modules global
 - **Safe Batch Updates** - Reliably updates and disables modules even when all modules for a project are unchecked.
 - **Role-Based Permissions** - Granular control via `Manage project modules globally` permission.
 - **Bilingual Support** - English (`en`) and Russian (`ru`) translations included.
-- **Modern Rails Compatibility** - Fully compatible with Redmine 5.x, 6.x, and 7.x (Rails 6, 7 & 8 with Zeitwerk).
+- **Modern Rails & Ruby 4 Compatibility** - Fully compatible with Redmine 5.x, 6.x, and 7.x, running on Ruby 3.x and **Ruby 4.x** with Zeitwerk autoloading.
 
 ---
 
 ## 🖼️ How It Works
 
 1. **Navigate to** **Administration → Global Module Manager** (or via **Administration → Plugins → Configure**).
-2. **Search or Filter Projects** using the instant live search input.
-3. **Filter Modules** using the collapsible filters box if you want to focus on specific modules.
-4. **Check or Uncheck Modules** per project or using row/column bulk toggles.
-5. **Click Save** - All project modules are updated cleanly in a single batch.
+2. **Configure Sidebar Visibility**: In **Administration → Plugins → Configure**, toggle `[ ] Show 'Global Module Manager' link in Administration menu` according to your preference.
+3. **Search or Filter Projects** using the instant live search input.
+4. **Filter Modules** using the collapsible filters box if you want to focus on specific modules.
+5. **Check or Uncheck Modules** per project or using row/column bulk toggles.
+6. **Click Save** - All project modules are updated cleanly in a single batch.
 
 ---
 
 ## 📋 Requirements
 
 - **Redmine:** 5.0.0 or higher (including 5.x, 6.x, 7.x)
-- **Ruby:** 2.7, 3.0, 3.1, 3.2, 3.3, 3.4+
+- **Ruby:** 3.0, 3.1, 3.2, 3.3, 3.4, **4.0+**
 - **Database:** PostgreSQL, MySQL, SQLite3
 
 ---
@@ -86,15 +89,15 @@ Access is protected by Redmine's permission system:
 
 ## 🚀 Usage
 
-### Option A: Via Admin Menu (Recommended)
-1. Go to **Administration → Global Module Manager**.
-2. Use the live project search box or the module filter.
-3. Make your selections and click **Save**.
+### Option A: Via Admin Menu (Optional)
+- Appears under **Administration → Global Module Manager** (can be toggled in plugin configuration).
+- Use the live project search box or the module filter.
+- Make your selections and click **Save**.
 
 ### Option B: Via Plugin Configuration
-1. Go to **Administration → Plugins**.
-2. Find **Module manager plugin** and click **Configure**.
-3. Use the embedded management matrix to make and save changes.
+- Go to **Administration → Plugins**.
+- Find **Module manager plugin** and click **Configure**.
+- Toggle the sidebar menu display setting or use the embedded matrix directly.
 
 ---
 
@@ -102,7 +105,7 @@ Access is protected by Redmine's permission system:
 
 ```text
 module_manager/
-├── init.rb                                         # Plugin registration & Zeitwerk loader guards
+├── init.rb                                         # Plugin registration, menu conditions & Zeitwerk guards
 ├── README.md                                       # Documentation
 ├── LICENSE                                         # MIT License
 ├── config/
@@ -117,7 +120,7 @@ module_manager/
 │       ├── module_manager_settings/
 │       │   └── index.html.erb                      # Main Administration interface
 │       └── module_manager/settings/
-│           └── _index.html.erb                     # Embedded plugin settings partial
+│           └── _index.html.erb                     # Embedded plugin settings partial with sidebar toggle
 ├── assets/
 │   └── stylesheets/
 │       └── module_manager.css                      # Sticky freeze table & search styling

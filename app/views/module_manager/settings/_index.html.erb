@@ -1,4 +1,15 @@
 <style>
+.module-manager-settings-header {
+  background: #fdfdfd;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+}
+.module-manager-settings-header p {
+  margin: 0;
+  font-size: 13px;
+}
 .module-manager-filter-bar {
   display: flex;
   align-items: center;
@@ -70,6 +81,22 @@
   background-color: #f0f4f8;
 }
 </style>
+
+<% current_settings = Setting.plugin_module_manager || {} %>
+
+<div class="module-manager-settings-header">
+  <p>
+    <label>
+      <%= hidden_field_tag 'settings[show_in_admin_menu]', '0' %>
+      <%= check_box_tag 'settings[show_in_admin_menu]', '1', current_settings['show_in_admin_menu'] != '0' %>
+      <strong><%= l(:label_show_in_admin_menu, default: "Show 'Global Module Manager' link in Administration menu") %></strong>
+    </label>
+    <br>
+    <em class="info" style="margin-left: 20px; color: #666;">
+      <%= l(:text_show_in_admin_menu_note, default: "Uncheck if you only want to access module management from this plugin configuration page.") %>
+    </em>
+  </p>
+</div>
 
 <% @all_modules = Redmine::AccessControl.available_project_modules %>
 <% ids = (defined?(params) && params.present?) ? params['ids'] : nil %>

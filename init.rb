@@ -10,7 +10,7 @@ Redmine::Plugin.register(PLUGIN_NAME.to_sym) do
   name 'Module manager plugin'
   author 'Arean Narrayan'
   description 'Mass enable/disable project modules across all projects'
-  version '0.0.2'
+  version '0.0.3'
   url 'https://github.com/Arean82/module_manager'
   author_url 'https://github.com/Arean82/module_manager'
 
@@ -19,15 +19,20 @@ Redmine::Plugin.register(PLUGIN_NAME.to_sym) do
     module_manager_settings: [:index, :update]
   }, require: :loggedin
 
-  # MENU - Adds link in Administration menu
+  # MENU - Adds link in Administration menu if enabled in settings
   menu :admin_menu, :module_manager,
        { controller: 'module_manager_settings', action: :index },
        caption: 'Global Module Manager',
-       html: { class: 'icon icon-modules' }
+       html: { class: 'icon icon-modules' },
+       if: Proc.new {
+         settings = Setting.plugin_module_manager || {}
+         settings['show_in_admin_menu'] != '0'
+       }
 
-  # Settings (optional - remove if not using plugin settings page)
-  settings default: {empty: false},
-           partial: PLUGIN_NAME + '/settings/index'
+  # Settings
+  settings default: {
+    'show_in_admin_menu' => '1'
+  }, partial: PLUGIN_NAME + '/settings/index'
 end
 
 # Fix for Zeitwerk autoloader
