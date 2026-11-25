@@ -1,5 +1,6 @@
 # Redmine Module Manager Plugin
 
+[![Version](https://img.shields.io/badge/version-0.0.4-green.svg)](https://github.com/Arean82/module_manager/releases)
 [![GitHub repo size](https://img.shields.io/github/repo-size/Arean82/module_manager)](https://github.com/Arean82/module_manager)
 [![GitHub last commit](https://img.shields.io/github/last-commit/Arean82/module_manager)](https://github.com/Arean82/module_manager/commits/main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -7,6 +8,8 @@
 [![Ruby](https://img.shields.io/badge/Ruby-3.x%20%7C%204.x-red.svg)](https://www.ruby-lang.org/)
 
 A **Redmine plugin** that allows administrators to manage project modules globally across all projects from a single unified interface. Enable or disable modules across multiple projects simultaneously with an interactive tree view, project search, sticky column navigation, and configurable admin panel visibility.
+
+**Author:** Arean Narrayan (<arean@synorastudio.in>)
 
 ---
 
@@ -130,12 +133,16 @@ module_manager/
 
 ---
 
-## 🤝 Contributing
+## 🤝 Author & Contributing
 
-Bug reports, feature requests, and pull requests are welcome on GitHub at [https://github.com/Arean82/module_manager](https://github.com/Arean82/module_manager).
+- **Author:** Arean Narrayan ([arean@synorastudio.in](mailto:arean@synorastudio.in))
+- **Repository:** [https://github.com/Arean82/module_manager](https://github.com/Arean82/module_manager)
+
+Bug reports, feature requests, and pull requests are welcome on GitHub!
 
 ---
 
 ## 📄 License
 
 This plugin is open-source under the terms of the [MIT License](LICENSE).
+Copyright (c) 2025-2026 Arean Narrayan <arean@synorastudio.in>.

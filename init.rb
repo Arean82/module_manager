@@ -10,7 +10,7 @@ Redmine::Plugin.register(PLUGIN_NAME.to_sym) do
   name 'Module manager plugin'
   author 'Arean Narrayan'
   description 'Mass enable/disable project modules across all projects'
-  version '0.0.3'
+  version '0.0.4'
   url 'https://github.com/Arean82/module_manager'
   author_url 'https://github.com/Arean82/module_manager'
 
