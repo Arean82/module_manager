@@ -1,13 +1,88 @@
+<style>
+.module-manager-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 15px;
+}
+.module-manager-quick-search input {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 250px;
+}
+.module-manager-table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  max-width: 100%;
+  max-height: 75vh;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+.module-manager-table-container table.list {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin-bottom: 0;
+}
+.module-manager-table-container table.list thead th {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background-color: #f6f7f9;
+  border-bottom: 2px solid #ccc;
+}
+.module-manager-table-container table.list th.sticky-col-check,
+.module-manager-table-container table.list td.sticky-col-check {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  width: 32px;
+  min-width: 32px;
+  text-align: center;
+}
+.module-manager-table-container table.list th.sticky-col-project,
+.module-manager-table-container table.list td.sticky-col-project {
+  position: sticky;
+  left: 32px;
+  z-index: 6;
+  background-color: #fff;
+  border-right: 2px solid #ccc;
+  min-width: 200px;
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+}
+.module-manager-table-container table.list thead th.sticky-col-check,
+.module-manager-table-container table.list thead th.sticky-col-project {
+  z-index: 12;
+  background-color: #e9ecef;
+}
+.module-manager-table-container table.list tr:hover td.sticky-col-check,
+.module-manager-table-container table.list tr:hover td.sticky-col-project {
+  background-color: #f0f4f8;
+}
+</style>
 
 <% @all_modules = Redmine::AccessControl.available_project_modules %>
-
 <% ids = (defined?(params) && params.present?) ? params['ids'] : nil %>
 <% @modules = ids.present? ? @all_modules.select{ |m| ids.include?(m.to_s) } : @all_modules %>
 
-
-<%= form_tag(Rails.application.routes.url_helpers.module_manager_update_path, :id => 'module_manager_update333') do %>
-<% end %>
-
+<div class="module-manager-filter-bar">
+  <div class="module-manager-quick-search">
+    <input type="text"
+           id="module-manager-partial-project-search"
+           placeholder="Search projects..."
+           onkeyup="filterModuleManagerPartialProjects(this.value)">
+  </div>
+</div>
 
 <div class="hide-when-print">
   <fieldset id="filters" class="collapsible collapsed">
@@ -28,25 +103,23 @@
           <%= link_to l(:button_clear), Rails.application.routes.url_helpers.plugin_settings_path('module_manager'), :class => 'icon icon-reload' %>
         </p>
       <% end %>
-
     </div>
   </fieldset>
 </div>
 
-
 <%= form_tag(Rails.application.routes.url_helpers.module_manager_update_path, :id => 'module_manager_update') do %>
-  <div class="autoscroll">
-    <table class="list permissions">
+  <div class="autoscroll module-manager-table-container">
+    <table class="list permissions" id="module-manager-partial-table">
       <thead>
       <tr>
-        <th></th>
-        <th><%=l(:label_project)%></th>
+        <th class="sticky-col-check"></th>
+        <th class="sticky-col-project"><%=l(:label_project)%></th>
         <% @modules.each do |modul| %>
           <th>
             <%= link_to('', '#',
-                                 onclick: "toggleCheckboxesBySelector('input.role-#{modul}'); return false;",
-                                 :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
-                                 :class => 'icon-only icon-checked') %> <%= l_or_humanize(modul, :prefix => "project_module_")  %>
+                        onclick: "toggleCheckboxesBySelector('input.role-#{modul}'); return false;",
+                        :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
+                        :class => 'icon-only icon-checked') %> <%= l_or_humanize(modul, :prefix => "project_module_")  %>
           <input type="hidden" value="<%= modul %>" name="all_modules[]">
           </th>
         <% end %>
@@ -54,22 +127,22 @@
       </thead>
       <tbody>
       <% project_tree(Project.all, :init_level => true) do |project, level| %>
-        <tr class="<%= "project-#{project.identifier}" %> <%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
-          <td>              <%= link_to_function('',
-                                                 "toggleCheckboxesBySelector('.project-#{project.identifier} input')",
-                                                 :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
-                                                 :class => 'icon-only icon-checked') %></td>
-          <td class="name">
-
-            <span><%= link_to_project_settings(project, {}, :title => project.short_description) %></span></td>
+        <tr class="project-partial-row project-<%= project.identifier %> <%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>"
+            data-project-name="<%= project.name.downcase %>">
+          <td class="sticky-col-check">
+            <%= link_to('', '#',
+                        onclick: "toggleCheckboxesBySelector('.project-#{project.identifier} input'); return false;",
+                        :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
+                        :class => 'icon-only icon-checked') %>
+            <input type="hidden" name="all_projects[]" value="<%= project.id %>">
+          </td>
+          <td class="name sticky-col-project">
+            <span><%= link_to_project(project, {}, :title => project.name) %></span>
+          </td>
           <% @modules.each do |modul| %>
-            <%# if role.setable_permissions.include? permission %>
-            <td title="<%= " (#{project.name})" %>">
-              <%= check_box_tag "enabled_module[#{project.identifier}][]", modul, (project.module_enabled? modul), :id => nil, :class => "role-#{modul}" %>
+            <td title="<%= project.name %>">
+              <%= check_box_tag "enabled_module[#{project.id}][]", modul, (project.module_enabled? modul), :id => nil, :class => "role-#{modul}" %>
             </td>
-            <%# else %>
-            <!--                <td></td>-->
-            <%# end %>
           <% end %>
         </tr>
       <% end %>
@@ -79,3 +152,18 @@
   <p><%= check_all_links 'module_manager_update' %></p>
   <p><%= submit_tag l(:button_save) %></p>
 <% end %>
+
+<script>
+function filterModuleManagerPartialProjects(term) {
+  var val = (term || '').toLowerCase().trim();
+  var rows = document.querySelectorAll('#module-manager-partial-table tbody tr.project-partial-row');
+  rows.forEach(function(row) {
+    var name = row.getAttribute('data-project-name') || '';
+    if (!val || name.indexOf(val) !== -1) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+}
+</script>

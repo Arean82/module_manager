@@ -1,4 +1,8 @@
-<h2>Global Module Manager</h2>
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'module_manager', plugin: 'module_manager' %>
+<% end %>
+
+<h2><%= l(:label_module_manager, default: "Global Module Manager") %></h2>
 
 <div class="hide-when-print">
   <fieldset id="filters" class="collapsible collapsed">
@@ -8,7 +12,7 @@
     <div style="display: none;">
       <%= form_tag module_manager_path, method: :get do %>
         <fieldset>
-          <legend>Filter modules to display:</legend>
+          <legend><%= l(:label_filter_modules_to_display, default: "Filter modules to display:") %></legend>
           <% Redmine::AccessControl.available_project_modules.each do |m| %>
             <div>
               <%= check_box_tag "ids[]", m, @modules.include?(m) %>
@@ -26,12 +30,12 @@
 </div>
 
 <%= form_tag module_manager_update_path, :id => 'module_manager_update' do %>
-  <div class="autoscroll">
+  <div class="autoscroll module-manager-table-container">
     <table class="list permissions">
       <thead>
         <tr>
-          <th></th>
-          <th><%= l(:label_project) %></th>
+          <th class="sticky-col-check"></th>
+          <th class="sticky-col-project"><%= l(:label_project) %></th>
           <% @modules.each do |modul| %>
             <th>
               <%= link_to('', '#',
@@ -47,13 +51,13 @@
       <tbody>
         <% project_tree(Project.all, :init_level => true) do |project, level| %>
           <tr class="<%= "project-#{project.identifier}" %> <%= project.css_classes %> <%= level > 0 ? "idnt idnt-#{level}" : nil %>">
-            <td>
+            <td class="sticky-col-check">
               <%= link_to('', '#',
                    onclick: "toggleCheckboxesBySelector('.project-#{project.identifier} input'); return false;",
                    :title => "#{l(:button_check_all)}/#{l(:button_uncheck_all)}",
                    :class => 'icon-only icon-checked') %>
             </td>
-            <td class="name">
+            <td class="name sticky-col-project">
               <span><%= link_to_project(project, {}, :title => project.name) %></span>
             </td>
             <% @modules.each do |modul| %>

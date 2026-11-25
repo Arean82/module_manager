@@ -1,0 +1,98 @@
+/* Module Manager Enhancements: Sticky Columns, Sticky Header & Quick Filter */
+
+.module-manager-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 15px;
+}
+
+.module-manager-quick-search {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.module-manager-quick-search input {
+  padding: 6px 10px 6px 28px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  width: 250px;
+}
+
+.module-manager-quick-search i {
+  position: absolute;
+  left: 8px;
+  color: #888;
+  pointer-events: none;
+}
+
+.module-manager-table-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  position: relative;
+  max-width: 100%;
+  max-height: 75vh;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.module-manager-table-container table.list {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+/* Sticky Header (Vertical Scrolling) */
+.module-manager-table-container table.list thead th {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background-color: #f6f7f9;
+  border-bottom: 2px solid #ccc;
+}
+
+/* Freeze column 1: checkbox / toggle all */
+.module-manager-table-container table.list th.sticky-col-check,
+.module-manager-table-container table.list td.sticky-col-check {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  background-color: #fff;
+  border-right: 1px solid #e0e0e0;
+  width: 32px;
+  min-width: 32px;
+  text-align: center;
+}
+
+/* Freeze column 2: Project name */
+.module-manager-table-container table.list th.sticky-col-project,
+.module-manager-table-container table.list td.sticky-col-project {
+  position: sticky;
+  left: 32px;
+  z-index: 6;
+  background-color: #fff;
+  border-right: 2px solid #ccc;
+  min-width: 200px;
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.06);
+}
+
+/* Intersection of Top Sticky Header and Left Sticky Columns */
+.module-manager-table-container table.list thead th.sticky-col-check,
+.module-manager-table-container table.list thead th.sticky-col-project {
+  z-index: 12;
+  background-color: #e9ecef;
+}
+
+/* Row hover effect */
+.module-manager-table-container table.list tr:hover td.sticky-col-check,
+.module-manager-table-container table.list tr:hover td.sticky-col-project {
+  background-color: #f0f4f8;
+}
