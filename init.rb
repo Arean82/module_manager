@@ -23,7 +23,8 @@ Redmine::Plugin.register(PLUGIN_NAME.to_sym) do
   menu :admin_menu, :module_manager,
        { controller: 'module_manager_settings', action: :index },
        caption: 'Global Module Manager',
-       html: { class: 'icon icon-modules' },
+       html: { class: 'icon icon-apps' },
+       icon: 'apps',
        if: Proc.new {
          settings = Setting.plugin_module_manager || {}
          settings['show_in_admin_menu'] != '0'
