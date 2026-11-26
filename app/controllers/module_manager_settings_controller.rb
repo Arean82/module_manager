@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class ModuleManagerSettingsController < ApplicationController
+  layout 'admin'
+  menu_item :module_manager
+
   before_action :require_login
   before_action :authorize_global
 
